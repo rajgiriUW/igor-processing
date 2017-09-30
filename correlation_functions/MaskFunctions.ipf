@@ -31,6 +31,9 @@ Function NaNMask(maskIn)
 	
 end
 
+// Adds the ROI masks to the given image
+//	Need to set color in this line explicitly:
+//	eval={1,0,52280,0} ; in this case it's X, Red, Green, Blue character
 function appendroimasks(subset)
 	wave subset
 

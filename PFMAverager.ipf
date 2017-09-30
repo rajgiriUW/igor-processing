@@ -5,7 +5,10 @@
 //AVERPFMLOOP(): Averages PFM Hysteresis loops and plots them (amplitude, phase1, phase2, and frequency).
 //SAVEPFMLOOPS(): Saves .ibw's of the averaged amplitude, phase1, phase2, and frequency as well as a JPEG of the resulting stacked plot.
 
-Function averPFMloop(loopname, [starttrace, ncycles])				//Enter the prefix for your PFM loops (i.e. "PFM20012") in quotes. It has to be in quotes since it's a string.
+Function averPFMloop(loopname, [starttrace, ncycles])				
+//Enter the prefix for your PFM loops (i.e. "PFM20012") in quotes. It has to be in quotes since it's a string.
+//	starttrace = which trace to start with. e.g. if the first 7 cycles were bad, starttrace = 8
+//	ncyces = total number of sweeps. For ESM data this is often 25
 
 	String loopname
 	variable starttrace // # of trace to start with. Each is separated by 100 points. 

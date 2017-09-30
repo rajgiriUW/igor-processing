@@ -1,7 +1,7 @@
 #pragma rtGlobals=1		// Use modern global access method.
 
 //************************************************************************************
-/// Obadiah's Load Matrix functions
+/// Obadiah and Raj's Load Matrix functions
 //************************************************************************************
 
 // 	These files are frequently used to load text files as 2-D matrices in Igor
