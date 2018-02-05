@@ -43,6 +43,8 @@ Function LoadText2Matrix(path, keyword)
 	
 
 	NVAR isPIFM
+	NVAR useReshape
+	NVAR ReshapeRows
 	
 	index = 0;
 	index2=0;
@@ -90,6 +92,25 @@ Function LoadText2Matrix(path, keyword)
 					Matrixtranspose $Filename
 					ImageRotate/V $Filename
 					Duplicate/O M_RotatedImage, $Filename
+				endif
+				
+				if (useReshape == 1)
+					variable m =0
+					variable n = 0
+					variable numcols = dimsize($Filename, 0) / ReshapeRows
+					duplicate/O $FileName, Temp
+					Make/O/N=(ReshapeRows, numCols) OutputMatrix
+					for (m = 0; m < Reshaperows; m += 1)
+						for (n = 0; n < numcols; n += 1)
+							outputMatrix[m][n] = Temp[m*numCols + n]
+						
+						endfor
+						
+						
+					endfor
+					matrixTranspose OutputMatrix
+					Duplicate/O OutputMatrix, $Filename
+				
 				endif
 				
 			index2 = index2 + 1;							//Increment the loaded files counter
@@ -385,9 +406,9 @@ End
 
 // Add loadpanelinit() when fixing the panel
 Window loadpanel() : Panel
-	loadpanelinit()
+	loadpanelinit() 
 	PauseUpdate; Silent 1		// building window...
-	NewPanel /W=(839,133,1121,266)
+	NewPanel /W=(781,312,1026,432)
 	ShowTools/A
 	SetVariable Keyword,pos={9,10},size={113,16},title="Keyword"
 	SetVariable Keyword,limits={-inf,inf,0},value= loadname
@@ -395,21 +416,23 @@ Window loadpanel() : Panel
 	Button LoadText,fColor=(61440,61440,61440)
 	Button LoadMatrix,pos={90,32},size={63,20},proc=LoadTextMatrix,title="Text Matrix"
 	Button LoadMatrix,fColor=(61440,61440,61440)
-	Button LoadMatrix1,pos={163,34},size={63,20},proc=LoadIBWMatrix,title="IBW Matrix"
+	Button LoadMatrix1,pos={87,82},size={63,20},proc=LoadIBWMatrix,title="IBW Matrix"
 	Button LoadMatrix1,fColor=(61440,61440,61440)
-	SetVariable columns,pos={5,60},size={78,16},title="Columns"
-	SetVariable columns,limits={1,inf,1},value= NumColumns
-	CheckBox PiFM,pos={152,59},size={42,14},proc=CheckPIFM,title="PiFM",value= 1
-	SetVariable columns1,pos={7,82},size={76,16},title="Start Col"
-	SetVariable columns1,limits={0,inf,1},value= StartColumn
-	SetVariable Lines,pos={7,104},size={77,16},title="Start Line"
-	SetVariable Lines,limits={0,inf,1},value= StartLine
+	SetVariable columns,pos={4,60},size={75,16},title="Columns"
+	SetVariable columns,limits={1,inf,1},value= columns
+	CheckBox PiFM,pos={103,60},size={42,14},proc=CheckPIFM,title="PiFM",value= 0
+	SetVariable reshape,pos={132,10},size={75,16},title="cols"
+	SetVariable reshape,limits={1,inf,1},value= ReshapeRows
+	CheckBox usereshape,pos={164,35},size={67,14},proc=CheckReshape,title="Reshape?"
+	CheckBox usereshape,variable= useReshape
 EndMacro
 
 function loadpanelinit()
 	Variable/G NumColumns = 0 
 	Variable/G StartColumn = 0
 	Variable/G StartLine = 0
+	Variable/G ReshapeRows = 128
+	Variable/G useReshape = 0
 end
 
 Function LoadTextButton(ba) : ButtonControl
@@ -435,17 +458,12 @@ Function LoadTextMatrix(ba) : ButtonControl
 	STRUCT WMButtonAction &ba
 	SVAR loadname
 	NVAR isPIFM
+	NVAR useReshape
 
 	switch( ba.eventCode )
 		case 2: // mouse up
 			// click code here
-			if(isPIFM)
-				LoadMatrix(loadname)
-
-			else
-				LoadMatrix(loadname)
-			endif
-			
+			LoadMatrix(loadname)
 			break
 		case -1: // control being killed
 			break
@@ -477,6 +495,21 @@ Function CheckPIFM(cba) : CheckBoxControl
 	switch( cba.eventCode )
 		case 2: // mouse up
 			isPIFM = cba.checked
+			break
+		case -1: // control being killed
+			break
+	endswitch
+
+	return 0
+End
+
+Function CheckReshape(cba) : CheckBoxControl
+	STRUCT WMCheckboxAction &cba
+	NVAR useReshape
+
+	switch( cba.eventCode )
+		case 2: // mouse up
+			useReshape = cba.checked
 			break
 		case -1: // control being killed
 			break
