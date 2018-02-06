@@ -110,7 +110,8 @@ Function LoadText2Matrix(path, keyword)
 					endfor
 					matrixTranspose OutputMatrix
 					Duplicate/O OutputMatrix, $Filename
-				
+					ImageRotate/H $Filename
+					Duplicate/O M_RotatedImage, $Filename
 				endif
 				
 			index2 = index2 + 1;							//Increment the loaded files counter
