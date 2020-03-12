@@ -61,7 +61,7 @@ function correctImg(image)
 	Wave tfp_fixedWave0 = root:Images:tfp_fixedWave0
 		
 	SetDataFolder root:Images
-	image[][][1] = tfpWave0[p][q]
-	image[][][3] = shiftWave0[p][q]
-	image[][][2] = tfp_fixedWave0[p][q]
+	image[][][3] = tfpWave0[p][q]
+	image[][][2] = shiftWave0[p][q]
+	image[][][1] = tfp_fixedWave0[p][q]
 end
