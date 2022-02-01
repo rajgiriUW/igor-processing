@@ -222,11 +222,13 @@ Function ShiftProc(ba) : ButtonControl
 			SVAR Path2 = root:Path2
 	
 			// Check if part of an Asylum image stack or not
-			if (dimsize($Path1, 3) != 0)
+			if (dimsize($Path1, 2) != 0)
 				Duplicate/O/R=[][][Layer1] $Path1, Image1
 				Duplicate/O/R=[][][Layer2] $Path2, Image2
 				Duplicate/O/R=[][][TargetLayer] $Path2, TargetShift
 				Redimension/N=(-1,-1) TargetShift
+				Redimension/N=(-1,-1) Image1
+				Redimension/N=(-1,-1) Image2
 			else
 				Duplicate/O $Path1, Image1
 				Duplicate/O $Path2, Image2
